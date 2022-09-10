@@ -3,7 +3,6 @@ package com.GIS.boot.bean;
 public class User {
     private String name;
     private String password;
-    private Integer id;
 
     public User(){
     }
@@ -29,11 +28,5 @@ public class User {
         this.password = password;
     }
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 }
