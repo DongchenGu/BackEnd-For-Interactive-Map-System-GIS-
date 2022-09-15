@@ -1,32 +1,52 @@
 package com.GIS.boot.bean;
 
-public class User {
-    private String name;
-    private String password;
+import lombok.Data;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.io.Serializable;
+
+
+@Document("USER")
+public class User implements Serializable {
+    private String username;
+    private int  hashPWD;
+    private String email;
+
 
     public User(){
     }
 
-    public User(String name, String password){
-        this.name=name;
-        this.password= password;
+    public User(String email, String username, int hashPWD){
+        this.username=username;
+        this.hashPWD= hashPWD;
+        this.email = email;
+
     }
 
-    public String getName() {
-        return name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getHashPWD() {
+        return hashPWD;
     }
 
-    public String getPassword() {
-        return password;
+    public void setHashPWD(int hashPWD) {
+        this.hashPWD = hashPWD;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
 
+
+    public String getEmail() {
+        return email;
+    }
 }

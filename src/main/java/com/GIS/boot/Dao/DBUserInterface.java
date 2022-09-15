@@ -1,11 +1,15 @@
 package com.GIS.boot.Dao;
 
 import com.GIS.boot.bean.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface DBUserInterface extends MongoRepository<User, String> {
 
-    //findByUsername 命名有研究，比如 findBy后面的名称是实体类属性名称
+public interface DBUserInterface {
 
-    public User findByname(String username);
+    public void saveUser(User user);
+
+    public User findUserByEmail(String email);
+
+    public void updateUser(User user);
+
+    public void deleteUserByEmail(String email);
 }
