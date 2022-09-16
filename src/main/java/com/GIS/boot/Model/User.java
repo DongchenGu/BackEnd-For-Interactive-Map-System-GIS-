@@ -1,7 +1,5 @@
-package com.GIS.boot.bean;
+package com.GIS.boot.Model;
 
-import lombok.Data;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;

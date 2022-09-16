@@ -1,8 +1,7 @@
 package com.GIS.boot.Service;
 
 import com.GIS.boot.Dao.DBUserInterface;
-import com.GIS.boot.Dao.DBUserInterfaceImpl;
-import com.GIS.boot.bean.User;
+import com.GIS.boot.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ public class UserService {
     private DBUserInterface dbUserInterfaceImpl;
 
 
-    public String LoginIn(String email, String username, String password, HttpServletRequest request) {
+    public String LoginIn(String email, String password) {
         //根据用户名查询，用户是否存在
         User user = dbUserInterfaceImpl.findUserByEmail(email);
                  //如果存在
@@ -29,7 +28,8 @@ public class UserService {
                          if(password.hashCode()==(user.getHashPWD())){
                                  //如果密码正确
                                  //将用户信息放入到会话中...
-                                 request.setAttribute("user", user);
+                                 //request.setAttribute("user", user);
+                                 logger.info("登录成功");
                                  return "success";
                              }else{
                                  //如果密码错误
@@ -46,6 +46,10 @@ public class UserService {
 
 
     public Boolean Insert(String email, String username,String password) {
+        logger.info(email);
+        logger.info(username);
+        logger.info("传入的密码");
+        logger.info(password);
         User testuser = null;
         //从DB中寻找是否有相同的email注册过
         testuser = dbUserInterfaceImpl.findUserByEmail(email);

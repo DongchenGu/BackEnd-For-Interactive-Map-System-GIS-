@@ -1,27 +1,28 @@
 package com.GIS.boot.Dao;
 
-import com.GIS.boot.Dao.DBUserInterface;
-import com.GIS.boot.bean.User;
+import com.GIS.boot.Model.User;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 
 
-@Component
+@Repository
 public class DBUserInterfaceImpl  implements DBUserInterface {
 
     @Autowired
-    private  MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
+//    @Autowired
+//    public DBUserInterfaceImpl(MongoTemplate mongoTemplate) {
+//        this.mongoTemplate = mongoTemplate;
+//    }
 
     @Override
     public void saveUser(User user) {

@@ -1,6 +1,6 @@
 package com.GIS.boot.Dao;
 
-import com.GIS.boot.bean.User;
+import com.GIS.boot.Model.User;
 
 
 public interface DBUserInterface {
