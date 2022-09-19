@@ -3,9 +3,10 @@ package com.GIS.boot.Controller;
 
 import com.GIS.boot.Model.User;
 import com.GIS.boot.Model.UserInfo;
+import com.GIS.boot.Service.TokenUtils;
 import com.GIS.boot.Service.UserService;
 
-import com.alibaba.fastjson.JSONObject;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.Result;
+import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONObject;
 
 
 @Slf4j
@@ -25,17 +29,35 @@ public class LoginController {
     //将Service注入Web层
     @Autowired
     UserService userService;
+    @Autowired
+    private TokenUtils tokenUtils;
+
 
     @CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST})
     @RequestMapping(value="/login", method = {RequestMethod.POST})
-     public String login(@RequestBody Map<String ,String> userInformation){
+     public Object  login(@RequestBody Map<String ,String> userInformation){
+
+        String email = userInformation.get("email");
+        String password = userInformation.get("password");
+        JSONObject jsonObject=new JSONObject();
 
         System.out.println(userInformation.get("email")+" "+userInformation.get("password"));
-        String result =userService.LoginIn(userInformation.get("email"),userInformation.get("password"));
-        if(result.equals("success")){
-            return "success";
-        }else{
-            return "error";
+        String result =userService.LoginIn(email,password);
+
+        if(result=="success"){
+            Map<String, String> userInfo = new HashMap<>();
+            userInfo.put("email", email);
+            userInfo.put("password", password);
+
+            //创建并将token返回给用户
+            String token =tokenUtils.createToken(email,password);
+            jsonObject.put("token", token);
+            jsonObject.put("user", userInfo);
+
+            return jsonObject;
+        }else {
+            jsonObject.put("errMsg",result);
+            return  jsonObject;
         }
     }
 

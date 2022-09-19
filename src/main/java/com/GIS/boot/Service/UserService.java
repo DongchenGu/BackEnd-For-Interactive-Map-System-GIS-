@@ -18,6 +18,8 @@ public class UserService {
     //将dao层属性注入service层
     @Autowired
     private DBUserInterface dbUserInterfaceImpl;
+    @Autowired
+    private  TokenUtils tokenUtils;
 
 
     public String LoginIn(String email, String password) {
@@ -27,8 +29,6 @@ public class UserService {
                  if(user!=null){
                          if(password.hashCode()==(user.getHashPWD())){
                                  //如果密码正确
-                                 //将用户信息放入到会话中...
-                                 //request.setAttribute("user", user);
                                  logger.info("登录成功");
                                  return "success";
                              }else{
@@ -38,8 +38,8 @@ public class UserService {
                              }
                      }else{
                          //如果不存在，代码邮箱和密码输入有误
-                        System.out.println("user-not-exit");
-                         return "user-not-exit";
+                        System.out.println("user-not-exist");
+                         return "user-not-exist";
                      }
     }
 
