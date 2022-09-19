@@ -48,7 +48,11 @@ public  class MMFilter implements Filter {
             if("/login".equals(url)){
                 filterChain.doFilter(servletRequest,servletResponse);
                 return;
-            }else{
+            }else if("/register".equals(url)){
+                filterChain.doFilter(servletRequest,servletResponse);
+                return;
+            }
+            else{
                 //其他请求验证token
                 String token = ((HttpServletRequest)servletRequest).getHeader("token");
                 if(StringUtils.isNotBlank(token)){
