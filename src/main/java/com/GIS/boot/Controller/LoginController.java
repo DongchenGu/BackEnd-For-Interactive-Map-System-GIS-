@@ -44,12 +44,13 @@ public class LoginController {
         JSONObject jsonObject=new JSONObject();
 
         System.out.println(userInformation.get("email")+" "+userInformation.get("password"));
-        String result =userService.LoginIn(email,password);
+        Map<String, String> result =userService.LoginIn(email,password);
 
-        if(result=="success"){
+        if(result.get("tag")=="success"){
             Map<String, String> userInfo = new HashMap<>();
             userInfo.put("email", email);
             userInfo.put("password", password);
+            userInfo.put("username", result.get("username"));
 
             //创建并将token返回给用户
             String token =tokenUtils.createToken(email,password);

@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class UserService {
 
@@ -22,7 +25,9 @@ public class UserService {
     private  TokenUtils tokenUtils;
 
 
-    public String LoginIn(String email, String password) {
+
+    public  Map<String, String> LoginIn(String email, String password) {
+        Map<String, String> AuthReturn = new HashMap<>();
         //根据用户名查询，用户是否存在
         User user = dbUserInterfaceImpl.findUserByEmail(email);
                  //如果存在
@@ -30,16 +35,21 @@ public class UserService {
                          if(password.hashCode()==(user.getHashPWD())){
                                  //如果密码正确
                                  logger.info("登录成功");
-                                 return "success";
+                                 //因为用户请求登录的时候不包括用户名，我们返回的时候得把对应的用户名也返回回去，后面还需要用
+                                 AuthReturn.put("username", user.getUsername());
+                                AuthReturn.put("tag", "success");
+                                 return AuthReturn;
                              }else{
                                  //如果密码错误
                                  System.out.println("wrong-password");
-                                 return "wrong-password";
+                                 AuthReturn.put("tag", "wrong-password");
+                                 return AuthReturn;
                              }
                      }else{
                          //如果不存在，代码邮箱和密码输入有误
                         System.out.println("user-not-exist");
-                         return "user-not-exist";
+                        AuthReturn.put("tag", "user-not-exist");
+                         return AuthReturn;
                      }
     }
 
