@@ -39,7 +39,7 @@ public class DBUserInterfaceImpl  implements DBUserInterface {
     @Override
     public void updateUser(User user) {
         Query query=new Query(Criteria.where("email").is(user.getEmail()));
-        Update update= new Update().set("userName", user.getUsername()).set("hashPWD"
+        Update update= new Update().set("username", user.getUsername()).set("hashPWD"
                 , user.getHashPWD());
         //更新查询返回结果集的第⼀条
         UpdateResult result =mongoTemplate.updateFirst(query,update,User.class);

@@ -34,6 +34,37 @@ public class LoginController {
     @Autowired
     private TokenUtils tokenUtils;
 
+    //实现修改用户信息的功能
+    @CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST})
+    @RequestMapping(value="/updateProfile", method = {RequestMethod.POST})
+    public String updateProfile(@RequestBody Map<String ,String> userInformation, HttpServletResponse response){
+        JSONObject jsonObject=new JSONObject();
+        String email = userInformation.get("email");
+        String password = userInformation.get("password");
+        String username = userInformation.get("username");
+
+        Map<String, String> result = userService.Update(email,password,username);
+        if(result.get("tag").equals("success")){
+            Map<String, String> userInfo = new HashMap<>();
+            userInfo.put("email", email);
+            userInfo.put("username", username);
+            //放置用户重登陆标志，一旦用户更改了密码就得重新登录
+            if(password!=null){
+                userInfo.put("relogin", "true");
+            }else{
+                userInfo.put("relogin", "false");
+            }
+
+            jsonObject.put("user", userInfo);
+            jsonObject.put("success",true);
+            return jsonObject.toString();
+        }else{
+            jsonObject.put("errMsg",result);
+            return  jsonObject.toString();
+        }
+    }
+
+
 
     @CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST})
     @RequestMapping(value="/login", method = {RequestMethod.POST})
@@ -49,7 +80,7 @@ public class LoginController {
         if(result.get("tag")=="success"){
             Map<String, String> userInfo = new HashMap<>();
             userInfo.put("email", email);
-            userInfo.put("password", password);
+            //userInfo.put("password", password);
             userInfo.put("username", result.get("username"));
 
             //创建并将token返回给用户

@@ -43,6 +43,7 @@ public  class MMFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         Map<String,String> map = new HashMap<>();
         String url =  ((HttpServletRequest)servletRequest).getRequestURI();
+        String method = ((HttpServletRequest)servletRequest).getMethod();
         if(url != null){
             //登录请求直接放行
             if("/login".equals(url)){
@@ -51,13 +52,23 @@ public  class MMFilter implements Filter {
             }else if("/register".equals(url)){
                 filterChain.doFilter(servletRequest,servletResponse);
                 return;
-            }
-            else{
+            }else if("OPTIONS".equals(method)){
+                //必须要放行options请求,
+                //查询请求发出前的OPTIONS请求是检查服务器是否支持跨域请求的，它并没有带上headers中的token信息，
+                //所以后台在接到OPTIONS请求后获取不到token信息，直接返回了。所以前端也出现跨域情况。
+                filterChain.doFilter(servletRequest,servletResponse);
+                return;
+            }else{
                 //其他请求验证token
-                String token = ((HttpServletRequest)servletRequest).getHeader("token");
-                if(StringUtils.isNotBlank(token)){
+                String token = ((HttpServletRequest)servletRequest).getHeader("authorization");
+                //StringUtils.isNotBlank(token)
+                //System.out.println(token);
+                if(token!=null){
+
                     //token验证结果
                     int verify  = tokenUtils.verify(token);
+                    //System.out.println("verify");
+                    //System.out.println(verify);
                     if(verify != 1){
                         //验证失败
                         if(verify == 2){
@@ -72,7 +83,7 @@ public  class MMFilter implements Filter {
                     }
                 }else{
                     //token为空的返回
-                    map.put("errorMsg","未携带token信息");
+                    map.put("errMsg","未携带token信息");
                 }
             }
             JSONObject jsonObject = new JSONObject(map);

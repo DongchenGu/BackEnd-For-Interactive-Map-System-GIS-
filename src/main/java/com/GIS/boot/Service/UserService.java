@@ -24,11 +24,37 @@ public class UserService {
     @Autowired
     private  TokenUtils tokenUtils;
 
+    public Map<String, String> Update(String email, String password,String username){
+        Map<String, String> AuthReturn = new HashMap<>();
+        User updateUser=null;
+        int passwordInDataBase = 0;
+        int hashNewPassword = 0;
+        //根据email查询用户
+        User searchUser = dbUserInterfaceImpl.findUserByEmail(email);
+        //如果存在
+        if(searchUser!=null){
+            //看密码是否为空
+            if(password==null){
+                passwordInDataBase = searchUser.getHashPWD();
+                updateUser = new User(email,username,passwordInDataBase);
+            }else{
+                hashNewPassword= password.hashCode();
+                updateUser = new User(email,username,hashNewPassword);
+            }
+
+            dbUserInterfaceImpl.updateUser(updateUser);
+            AuthReturn.put("tag", "success");
+
+        }else{
+            AuthReturn.put("tag", "user-not-exist");
+        }
+        return  AuthReturn;
+    }
 
 
     public  Map<String, String> LoginIn(String email, String password) {
         Map<String, String> AuthReturn = new HashMap<>();
-        //根据用户名查询，用户是否存在
+        //根据email查询，用户是否存在
         User user = dbUserInterfaceImpl.findUserByEmail(email);
                  //如果存在
                  if(user!=null){
