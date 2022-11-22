@@ -34,9 +34,16 @@ public class UserService {
         //根据email查询用户
         User searchUser = dbUserInterfaceImpl.findUserByEmail(email);
         if(searchUser!= null){
-            System.out.println("开始写入");
-            updateUserPhoto = new UserWithPhoto(email,photo);
-            dbUserInterfaceImpl.updateUserPhoto(updateUserPhoto);
+            UserWithPhoto searchUserPhoto = dbUserInterfaceImpl.findPhotoByEmail(email);
+            if(searchUserPhoto!=null){
+                System.out.println("开始更新用户图片");
+                updateUserPhoto = new UserWithPhoto(email,photo);
+                dbUserInterfaceImpl.updateUserPhoto(updateUserPhoto);
+            }else{
+                System.out.println("开始保存用户图片");
+                updateUserPhoto = new UserWithPhoto(email,photo);
+                dbUserInterfaceImpl.saveUserPhoto(updateUserPhoto);
+            }
             updatePhotoReturn.put("tag", "success");
         }else{
             updatePhotoReturn.put("tag", "user-not-exist");
@@ -44,6 +51,26 @@ public class UserService {
         return updatePhotoReturn;
     }
 
+    //下载用户头像
+    public Map<String, String> downloadUserPhoto(String email){
+        Map<String, String> downloadPhotoReturn = new HashMap<>();
+        UserWithPhoto downloadUserPhoto = null;
+        //根据email查询用户
+        User searchUser = dbUserInterfaceImpl.findUserByEmail(email);
+        if(searchUser!= null){
+            System.out.println("开始下载");
+            downloadUserPhoto = dbUserInterfaceImpl.findPhotoByEmail(email);
+            if (downloadUserPhoto !=null){
+                downloadPhotoReturn.put("tag", "success");
+                downloadPhotoReturn.put("userPhoto", downloadUserPhoto.getPhoto());
+            }else{
+                downloadPhotoReturn.put("tag", "photo-not-exist");
+            }
+        }else{
+            downloadPhotoReturn.put("tag", "user-not-exist");
+        }
+        return downloadPhotoReturn;
+    }
 
 
 

@@ -89,6 +89,26 @@ public class LoginController {
     }
 
 
+    @CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST} )
+    @RequestMapping(value="/downloadUserPhoto", method = {RequestMethod.POST})
+    public String downloadUserPhoto(@RequestBody Map<String ,String> UserPhotoRequest, HttpServletResponse response){
+        System.out.println("已接收到客户下载头像图片的请求");
+        String email = UserPhotoRequest.get("email");
+        JSONObject jsonObject=new JSONObject();
+        Map<String,String> result = userService.downloadUserPhoto(email);
+        if(result.get("tag")=="success"){
+            System.out.println("头像下载成功");
+            //上传用户头像成功，给客户返回结果
+            jsonObject.put("success", true);
+            jsonObject.put("userPhoto", result.get("userPhoto"));
+            return jsonObject.toString();
+        }else{
+            System.out.println("下载失败");
+            jsonObject.put("errMsg",result.get("tag"));
+            return  jsonObject.toString();
+        }
+    }
+
     @CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST})
     @RequestMapping(value="/login", method = {RequestMethod.POST})
      public String  login(@RequestBody Map<String ,String> userInformation, HttpServletResponse response){

@@ -59,14 +59,21 @@ public class DBUserInterfaceImpl  implements DBUserInterface {
     public void updateUserPhoto(UserWithPhoto userWithPhoto) {
         Query query = new Query(Criteria.where("email").is(userWithPhoto.getEmail()));
         Update update = new Update().set("photo", userWithPhoto.getPhoto());
-        try {
-            mongoTemplate.updateFirst(query, update, UserWithPhoto.class);
-        }catch(Exception e)
-        {
-            System.out.println("没找到用户图片，保存新的");;
-            mongoTemplate.save(userWithPhoto);
-        }
+        mongoTemplate.updateFirst(query, update, UserWithPhoto.class);
+        System.out.println("图片已经保存");
 
+    }
+
+    @Override
+    public UserWithPhoto findPhotoByEmail(String email) {
+        Query query= new Query(Criteria.where("email").is(email));
+        UserWithPhoto userWithPhoto = mongoTemplate.findOne(query,UserWithPhoto.class);
+        return  userWithPhoto;
+    }
+
+    @Override
+    public void saveUserPhoto(UserWithPhoto userWithPhoto) {
+        mongoTemplate.save(userWithPhoto);
     }
 
 

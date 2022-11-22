@@ -15,4 +15,8 @@ public interface DBUserInterface {
     public void deleteUserByEmail(String email);
 
     public  void  updateUserPhoto(UserWithPhoto userWithPhoto);
+
+    public UserWithPhoto findPhotoByEmail(String email);
+
+    public  void saveUserPhoto(UserWithPhoto userWithPhoto);
 }
