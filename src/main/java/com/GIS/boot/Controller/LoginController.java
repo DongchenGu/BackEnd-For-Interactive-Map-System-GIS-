@@ -65,6 +65,29 @@ public class LoginController {
     }
 
 
+    @CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST} )
+    @RequestMapping(value="/updateUserPhoto", method = {RequestMethod.POST})
+    public String updateUserPhoto(@RequestBody Map<String ,String> UserPhotoInfo, HttpServletResponse response){
+        System.out.println("接收到客户上传头像的请求");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,Access-Token,token");
+
+        String email = UserPhotoInfo.get("email");
+        String photo = UserPhotoInfo.get("userPhoto");
+        JSONObject jsonObject=new JSONObject();
+
+        Map<String,String> result = userService.updateUserPhoto(email,photo);
+        if(result.get("tag")=="success"){
+            System.out.println("头像上传成功");
+            //上传用户头像成功，给客户返回结果
+            jsonObject.put("success", true);
+            return jsonObject.toString();
+        }else{
+            System.out.println("头像上传失败");
+            jsonObject.put("errMsg",result);
+            return  jsonObject.toString();
+        }
+    }
+
 
     @CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST})
     @RequestMapping(value="/login", method = {RequestMethod.POST})

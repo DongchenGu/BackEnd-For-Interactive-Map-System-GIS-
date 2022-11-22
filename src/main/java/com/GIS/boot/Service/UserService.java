@@ -2,6 +2,7 @@ package com.GIS.boot.Service;
 
 import com.GIS.boot.Dao.DBUserInterface;
 import com.GIS.boot.Model.User;
+import com.GIS.boot.Model.UserWithPhoto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,28 @@ public class UserService {
     private DBUserInterface dbUserInterfaceImpl;
     @Autowired
     private  TokenUtils tokenUtils;
+
+
+    //上传用户的头像图片
+    public Map<String, String> updateUserPhoto(String email, String photo){
+        Map<String, String> updatePhotoReturn = new HashMap<>();
+
+        UserWithPhoto updateUserPhoto = null;
+        //根据email查询用户
+        User searchUser = dbUserInterfaceImpl.findUserByEmail(email);
+        if(searchUser!= null){
+            System.out.println("开始写入");
+            updateUserPhoto = new UserWithPhoto(email,photo);
+            dbUserInterfaceImpl.updateUserPhoto(updateUserPhoto);
+            updatePhotoReturn.put("tag", "success");
+        }else{
+            updatePhotoReturn.put("tag", "user-not-exist");
+        }
+        return updatePhotoReturn;
+    }
+
+
+
 
     public Map<String, String> Update(String email, String password,String username){
         Map<String, String> AuthReturn = new HashMap<>();

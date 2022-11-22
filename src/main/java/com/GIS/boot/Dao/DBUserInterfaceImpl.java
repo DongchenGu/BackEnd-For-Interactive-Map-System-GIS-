@@ -1,6 +1,7 @@
 package com.GIS.boot.Dao;
 
 import com.GIS.boot.Model.User;
+import com.GIS.boot.Model.UserWithPhoto;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,4 +54,20 @@ public class DBUserInterfaceImpl  implements DBUserInterface {
         Query query=new Query(Criteria.where("email").is(email));
         mongoTemplate.remove(query,User.class);
     }
+
+    @Override
+    public void updateUserPhoto(UserWithPhoto userWithPhoto) {
+        Query query = new Query(Criteria.where("email").is(userWithPhoto.getEmail()));
+        Update update = new Update().set("photo", userWithPhoto.getPhoto());
+        try {
+            mongoTemplate.updateFirst(query, update, UserWithPhoto.class);
+        }catch(Exception e)
+        {
+            System.out.println("没找到用户图片，保存新的");;
+            mongoTemplate.save(userWithPhoto);
+        }
+
+    }
+
+
 }

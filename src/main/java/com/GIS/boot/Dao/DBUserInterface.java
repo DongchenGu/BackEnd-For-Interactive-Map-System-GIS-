@@ -1,6 +1,7 @@
 package com.GIS.boot.Dao;
 
 import com.GIS.boot.Model.User;
+import com.GIS.boot.Model.UserWithPhoto;
 
 
 public interface DBUserInterface {
@@ -12,4 +13,6 @@ public interface DBUserInterface {
     public void updateUser(User user);
 
     public void deleteUserByEmail(String email);
+
+    public  void  updateUserPhoto(UserWithPhoto userWithPhoto);
 }
