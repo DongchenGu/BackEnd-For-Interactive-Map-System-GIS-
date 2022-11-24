@@ -42,6 +42,14 @@ public  class MMFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         Map<String,String> map = new HashMap<>();
+        HttpServletResponse response = (HttpServletResponse)servletResponse;
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS,PUT");
+        response.setHeader("Access-Control-Max-Age", "0");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+        response.setHeader("Allow", "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH");
+
+
         String url =  ((HttpServletRequest)servletRequest).getRequestURI();
         String method = ((HttpServletRequest)servletRequest).getMethod();
         if(url != null){
@@ -70,11 +78,11 @@ public  class MMFilter implements Filter {
                     //System.out.println("verify");
                     //System.out.println(verify);
                     if(verify != 1){
-                        //验证失败
+                        //]
                         if(verify == 2){
-                            map.put("errorMsg","token已过期");
+                            map.put("credentialError","token-expire");
                         }else if(verify == 0){
-                            map.put("errorMsg","用户信息验证失败");
+                            map.put("credentialError","UserInfo-not-match");
                         }
                     }else if(verify  == 1){
                         //验证成功，放行
@@ -83,15 +91,15 @@ public  class MMFilter implements Filter {
                     }
                 }else{
                     //token为空的返回
-                    map.put("errMsg","未携带token信息");
+                    map.put("credentialError","Error-no-token");
                 }
             }
             JSONObject jsonObject = new JSONObject(map);
-            servletResponse.setContentType("application/json");
+            response.setContentType("application/json");
             //设置响应的编码
-            servletResponse.setCharacterEncoding("utf-8");
+            response.setCharacterEncoding("utf-8");
             //响应
-            PrintWriter pw=servletResponse.getWriter();
+            PrintWriter pw=response.getWriter();
             pw.write(jsonObject.toString());
             pw.flush();
             pw.close();
